@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TimeIt ⏱️
 
-## Getting Started
+**TimeIt** is a modern, dynamic interval timer application designed for sports circuits and high-intensity interval training (HIIT). Built with performance and aesthetics in mind, it allows athletes to configure custom workout routines with ease.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Customizable Intervals**: Set the number of rounds, exercises, work duration, and rest periods.
+- **Dynamic Timer**: Visual countdown with distinct phases (Work, Rest, Round Rest).
+- **Modern UI**: Clean, responsive interface with smooth animations and dark mode support.
+- **Focus Mode**: Minimalist display during the workout to keep you focused on the effort.
+
+## 🛠️ Tech Stack
+
+This project is built with the latest web technologies:
+
+- **[Next.js 15](https://nextjs.org/)**: The React Framework for the Web.
+- **[TypeScript](https://www.typescriptlang.org/)**: For type-safe code and better developer experience.
+- **[Tailwind CSS 4](https://tailwindcss.com/)**: For utility-first, dynamic styling.
+- **[Shadcn UI](https://ui.shadcn.com/)**: For beautifully designed, reusable components.
+
+## 🤖 Built with Google Antigravity IDE
+
+This entire application was architected and coded using **Google Antigravity IDE**, an advanced AI-powered development environment that streamlines the coding process from conception to deployment.
+
+## 📂 Project Structure
+
+```
+src/
+├── app/                  # Next.js App Router pages and layouts
+│   ├── globals.css       # Global styles and Tailwind configuration
+│   ├── layout.tsx        # Root layout
+│   └── page.tsx          # Main application view
+├── components/           # React components
+│   ├── ui/               # Shadcn UI primitives (Button, Card, Input, etc.)
+│   ├── timer-config-form.tsx  # Configuration form component
+│   └── timer-display.tsx      # Active timer display component
+├── hooks/                # Custom React hooks
+│   └── use-interval-timer.ts  # Core timer logic and state machine
+└── lib/                  # Utility functions
+    └── utils.ts          # Class merging utilities
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🏁 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To run this project locally, follow these steps:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/AlexPst-Dev/TimeIt.git
+    cd TimeIt
+    ```
 
-## Learn More
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+3.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4.  Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
