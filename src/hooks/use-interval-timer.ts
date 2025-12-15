@@ -6,7 +6,8 @@ export type TimerPhase =
   | "WORK"
   | "REST"
   | "ROUND_REST"
-  | "FINISHED";
+  | "FINISHED"
+  | "PAUSED";
 
 export interface TimerConfig {
   rounds: number;
@@ -42,6 +43,9 @@ export function useIntervalTimer() {
     totalTime: 0,
     elapsedTime: 0,
   });
+
+  const [isPaused, setIsPaused] = useState(false);
+  const pauseTimeRef = useRef<number | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -110,6 +114,7 @@ export function useIntervalTimer() {
   };
 
   const tick = useCallback(() => {
+    if (isPaused) return;
     setState((prev) => {
       if (prev.timeLeft > 1) {
         return {
@@ -176,26 +181,41 @@ export function useIntervalTimer() {
     });
   }, [config]);
 
+  const togglePause = useCallback(() => {
+    if (state.phase === "IDLE" || state.phase === "FINISHED") return;
+
+    if (isPaused) {
+      // Resuming from pause
+      const pausedTime = pauseTimeRef.current
+        ? Date.now() - pauseTimeRef.current
+        : 0;
+      startTimeRef.current += pausedTime;
+      setIsPaused(false);
+    } else {
+      // Pausing
+      pauseTimeRef.current = Date.now();
+      setIsPaused(true);
+    }
+  }, [isPaused, state.phase]);
+
   useEffect(() => {
-    if (state.phase === "FINISHED") {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
+    if (state.phase === "IDLE" || state.phase === "FINISHED") {
+      if (timerRef.current) clearInterval(timerRef.current);
+      setIsPaused(false);
       return;
     }
 
-    if (state.phase !== "IDLE") {
+    if (isPaused) {
+      if (timerRef.current) clearInterval(timerRef.current);
+    } else {
       timerRef.current = setInterval(tick, 1000);
+      if (!startTimeRef.current) startTimeRef.current = Date.now();
     }
 
     return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
+      if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [state.phase, tick]);
+  }, [state.phase, tick, isPaused]);
 
   return {
     config,
@@ -204,5 +224,7 @@ export function useIntervalTimer() {
     startTimer,
     stopTimer,
     resetTimer,
+    isPaused,
+    togglePause,
   };
 }
