@@ -1,9 +1,8 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { TimerConfig } from "@/hooks/use-interval-timer"
-import { Play } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { TimerConfig } from "@/hooks/use-interval-timer";
+import { Play } from "lucide-react";
 
 interface TimerConfigFormProps {
   config: TimerConfig;
@@ -11,7 +10,11 @@ interface TimerConfigFormProps {
   onStart: () => void;
 }
 
-export function TimerConfigForm({ config, onConfigChange, onStart }: TimerConfigFormProps) {
+export function TimerConfigForm({
+  config,
+  onConfigChange,
+  onStart,
+}: TimerConfigFormProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     onConfigChange({
@@ -46,15 +49,20 @@ export function TimerConfigForm({ config, onConfigChange, onStart }: TimerConfig
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg border-0 bg-white/50 backdrop-blur-sm dark:bg-slate-950/50">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">TimeIt</CardTitle>
-        <CardDescription className="text-center">Configure your interval circuit</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="w-full flex flex-col space-y-6 p-6 bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          TIME IT
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Configure your interval circuit
+        </p>
+      </div>
+
+      <div className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="rounds">Rounds</Label>
+            <Label htmlFor="rounds">ROUNDS</Label>
             <Input
               id="rounds"
               name="rounds"
@@ -66,7 +74,7 @@ export function TimerConfigForm({ config, onConfigChange, onStart }: TimerConfig
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="exercises">Exercises</Label>
+            <Label htmlFor="exercises">EXERCISES</Label>
             <Input
               id="exercises"
               name="exercises"
@@ -80,57 +88,59 @@ export function TimerConfigForm({ config, onConfigChange, onStart }: TimerConfig
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="workDuration">Work Duration (sec)</Label>
+          <Label htmlFor="workDuration">WORK DURATION (sec)</Label>
           <Input
             id="workDuration"
             name="workDuration"
             type="number"
-            min="5"
-            step="5"
+            min="1"
             value={config.workDuration}
             onChange={handleChange}
-            className="text-center text-lg font-medium text-green-600"
+            className="text-center text-lg"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="restDuration">Rest Duration (sec)</Label>
+          <Label htmlFor="restDuration">REST DURATION (sec)</Label>
           <Input
             id="restDuration"
             name="restDuration"
             type="number"
             min="0"
-            step="5"
             value={config.restDuration}
             onChange={handleChange}
-            className="text-center text-lg font-medium text-amber-600"
+            className="text-center text-lg"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="roundRestDuration">Round Rest (sec)</Label>
+          <Label htmlFor="roundRestDuration">ROUND REST (sec)</Label>
           <Input
             id="roundRestDuration"
             name="roundRestDuration"
             type="number"
             min="0"
-            step="10"
             value={config.roundRestDuration}
             onChange={handleChange}
-            className="text-center text-lg font-medium text-blue-600"
+            className="text-center text-lg"
           />
         </div>
 
-        <div className="pt-4 text-center">
-            <p className="text-sm text-muted-foreground">Total Duration</p>
-            <p className="text-3xl font-bold text-slate-800 dark:text-slate-100">{calculateTotalDuration()}</p>
+        <div className="pt-4 w-full flex flex-col gap-2">
+          <p className="text-sm text-muted-foreground">TOTAL DURATION</p>
+          <p className="text-3xl text-center font-bold text-slate-800 dark:text-slate-100">
+            {calculateTotalDuration()}
+          </p>
         </div>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full h-12 text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg" onClick={onStart}>
-          <Play className="mr-2 h-5 w-5 fill-current" /> Start Workout
+
+        <Button
+          className="flex items-center justify-center w-full h-12 text-lg font-bold bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition-all shadow-md hover:shadow-lg"
+          onClick={onStart}
+        >
+          START WORKOUT
+          <Play className="ml-2 h-5 w-5 fill-current" />
         </Button>
-      </CardFooter>
-    </Card>
-  )
+      </div>
+    </div>
+  );
 }
