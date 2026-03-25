@@ -47,7 +47,9 @@ export function useIntervalTimer() {
   const [isPaused, setIsPaused] = useState(false);
   const pauseTimeRef = useRef<number | null>(null);
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  // Works in both browser and Node typings:
+  // In browsers `setInterval` returns a `number`, while in Node it returns a `Timeout`.
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startTimeRef = useRef<number>(0);
 
   const calculateTotalTime = useCallback((cfg: TimerConfig) => {
