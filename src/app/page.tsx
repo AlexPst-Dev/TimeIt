@@ -81,14 +81,14 @@ export default function Home() {
   useWakeLock(isTimerActive);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+    <main className="flex min-h-dvh flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
       <ThemeToggle />
 
       {/* Animated background */}
       <>
         {/* Solid background color */}
         <div
-          className="absolute inset-0 transition-colors duration-300 ease-in-out"
+          className="absolute inset-0 h-dvh transition-colors duration-300 ease-in-out"
           style={{
             backgroundColor: getCssColor(phaseColors.progress),
             clipPath: `polygon(0% ${100 - progress}%, 100% ${
@@ -99,7 +99,7 @@ export default function Home() {
       </>
 
       {/* Overlay for better text contrast */}
-      <div className="absolute inset-0 h-full w-full bg-linear-to-b from-white/80 to-white/20 dark:from-slate-950/90 dark:to-slate-950/30"></div>
+      <div className="absolute inset-0 h-dvh w-full bg-linear-to-b from-white/80 to-white/20 dark:from-slate-950/90 dark:to-slate-950/30"></div>
 
       {state.phase === "IDLE" ? (
         <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500">

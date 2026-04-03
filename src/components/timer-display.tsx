@@ -102,7 +102,7 @@ export function TimerDisplay({
   };
 
   return (
-    <div className="relative w-full flex items-center justify-center p-4">
+    <div className="relative w-full flex items-center justify-center p-4 h-dvh">
       <div className="relative z-10 bg-background/80 backdrop-blur-sm rounded-2xl p-8 w-full max-w-md space-y-8 border border-border/50 shadow-lg">
         <div className="text-center space-y-2">
           <h2
