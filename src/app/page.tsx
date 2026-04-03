@@ -9,6 +9,7 @@ import {
   getProgress,
 } from "@/components/timer-display";
 import { useIntervalTimer } from "@/hooks/use-interval-timer";
+import { useWakeLock } from "@/hooks/use-wake-lock";
 import { Moon, Sun } from "lucide-react";
 
 function ThemeToggle() {
@@ -73,6 +74,11 @@ export default function Home() {
   // Get phase colors and progress
   const phaseColors = getPhaseColor(state.phase);
   const progress = getProgress(state, config);
+
+  const isTimerActive =
+    state.phase !== "IDLE" && state.phase !== "FINISHED" && !isPaused;
+
+  useWakeLock(isTimerActive);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
