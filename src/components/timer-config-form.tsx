@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,17 +11,69 @@ interface TimerConfigFormProps {
   onStart: () => void;
 }
 
+// Les champs du formulaire avec leur valeur minimale
+const FIELDS: {
+  name: keyof TimerConfig;
+  label: string;
+  min: number;
+}[] = [
+  { name: "workDuration", label: "WORK DURATION (sec)", min: 1 },
+  { name: "restDuration", label: "REST DURATION (sec)", min: 0 },
+  { name: "roundRestDuration", label: "ROUND REST (sec)", min: 0 },
+];
+
 export function TimerConfigForm({
   config,
   onConfigChange,
   onStart,
 }: TimerConfigFormProps) {
+  // State local en string pour chaque champ, initialisé depuis config
+  const [localValues, setLocalValues] = useState<
+    Record<keyof TimerConfig, string>
+  >({
+    rounds: String(config.rounds),
+    exercises: String(config.exercises),
+    workDuration: String(config.workDuration),
+    restDuration: String(config.restDuration),
+    roundRestDuration: String(config.roundRestDuration),
+  });
+
+  // Sync si config change depuis l'extérieur (ex: reset)
+  useEffect(() => {
+    setLocalValues({
+      rounds: String(config.rounds),
+      exercises: String(config.exercises),
+      workDuration: String(config.workDuration),
+      restDuration: String(config.restDuration),
+      roundRestDuration: String(config.roundRestDuration),
+    });
+  }, [config]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    onConfigChange({
-      ...config,
-      [name]: parseInt(value) || 0,
-    });
+    // Autorise uniquement les chiffres (pas de signe, pas de décimal)
+    if (value === "" || /^\d+$/.test(value)) {
+      setLocalValues((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name } = e.target;
+    const key = name as keyof TimerConfig;
+    const fieldMeta = FIELDS.find((f) => f.name === key);
+    const min = fieldMeta?.min ?? 1;
+
+    const parsed = parseInt(localValues[key], 10);
+    // Si vide ou invalide, on remet la valeur minimale
+    const clamped = isNaN(parsed) ? min : Math.max(parsed, min);
+
+    setLocalValues((prev) => ({ ...prev, [key]: String(clamped) }));
+    onConfigChange({ ...config, [key]: clamped });
+  };
+
+  // Sélectionne tout le contenu au focus pour faciliter le remplacement
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
   };
 
   const formatTime = (seconds: number) => {
@@ -30,10 +83,6 @@ export function TimerConfigForm({
   };
 
   const calculateTotalDuration = () => {
-    // Simple calculation for display purposes
-    // (Work + Rest) * Exercises * Rounds - Rest + (RoundRest * (Rounds - 1))
-    // Logic should match hook but let's keep it simple estimation here or duplicate logic
-    // Let's duplicate the simple logic from hook for now or just trust the user sees the result
     let total = 0;
     for (let r = 1; r <= config.rounds; r++) {
       for (let e = 1; e <= config.exercises; e++) {
@@ -67,9 +116,12 @@ export function TimerConfigForm({
               id="rounds"
               name="rounds"
               type="number"
+              inputMode="numeric"
               min="1"
-              value={config.rounds}
+              value={localValues.rounds}
               onChange={handleChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
               className="text-center text-lg"
             />
           </div>
@@ -79,52 +131,34 @@ export function TimerConfigForm({
               id="exercises"
               name="exercises"
               type="number"
+              inputMode="numeric"
               min="1"
-              value={config.exercises}
+              value={localValues.exercises}
               onChange={handleChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
               className="text-center text-lg"
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="workDuration">WORK DURATION (sec)</Label>
-          <Input
-            id="workDuration"
-            name="workDuration"
-            type="number"
-            min="1"
-            value={config.workDuration}
-            onChange={handleChange}
-            className="text-center text-lg"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="restDuration">REST DURATION (sec)</Label>
-          <Input
-            id="restDuration"
-            name="restDuration"
-            type="number"
-            min="0"
-            value={config.restDuration}
-            onChange={handleChange}
-            className="text-center text-lg"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="roundRestDuration">ROUND REST (sec)</Label>
-          <Input
-            id="roundRestDuration"
-            name="roundRestDuration"
-            type="number"
-            min="0"
-            value={config.roundRestDuration}
-            onChange={handleChange}
-            className="text-center text-lg"
-          />
-        </div>
+        {FIELDS.map(({ name, label, min }) => (
+          <div key={name} className="space-y-2">
+            <Label htmlFor={name}>{label}</Label>
+            <Input
+              id={name}
+              name={name}
+              type="number"
+              inputMode="numeric"
+              min={min}
+              value={localValues[name]}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
+              className="text-center text-lg"
+            />
+          </div>
+        ))}
 
         <div className="pt-4 w-full flex flex-col gap-2">
           <p className="text-sm text-muted-foreground">TOTAL DURATION</p>
